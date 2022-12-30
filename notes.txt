@@ -89,3 +89,6 @@ Data Management
 		- unlock fork
 		- sleep
 	- how to track time since beginning of last meal?
+- Killer
+	- kills all threads if a philo dies
+		- how to check for death?
