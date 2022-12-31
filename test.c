@@ -30,14 +30,10 @@ void	philo_forks_get(t_philo *philo, __darwin_suseconds_t timestamp)
 		printf("%dms %d has taken a fork\n", timestamp, philo->num);
 		printf("%dms %d is eating\n", timestamp, philo->num);
 		usleep(philo->info->eat_time);
-		pthread_mutex_unlock(philo->fork);
 		printf("%dms %d is sleeping\n", timestamp, philo->num);
 		usleep(philo->info->sleep_time);
 	}
-	else
-	{
-		printf("%dms %d is thinking\n", timestamp, philo->num);
-	}
+	pthread_mutex_unlock(philo->fork);
 }
 
 void	*philo_routine(void *arg)
@@ -52,7 +48,7 @@ void	*philo_routine(void *arg)
 	gettimeofday(&time, NULL);
 	timestamp = time.tv_usec / 1000;
 	i = 0;
-	while (i < philo->info->eat_count && philo->alive == true)
+	while (philo->alive == true && i < philo->info->eat_count)
 	{
 		timestamp_old = timestamp;
 		gettimeofday(&time, NULL);
@@ -63,6 +59,7 @@ void	*philo_routine(void *arg)
 			philo->alive = false; // potential data race with dining loop thread
 			return (NULL);
 		}
+		printf("%dms %d is thinking\n", timestamp, philo->num);
 		philo_forks_get(philo, timestamp);
 		i++;
 	}
@@ -97,6 +94,7 @@ void	philos_kill(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
+		write(1, "y",1);
 		philos[i].alive = false;
 		i++;
 	}
@@ -109,6 +107,7 @@ void	philos_free(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
+			write(1, "x",1);
 		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
@@ -119,13 +118,14 @@ void	philos_dining(t_info *info, int num)
 {
 	t_philo			*philos;
 	int				i;
+	int				counter;
 
 	philos = malloc(sizeof(t_philo) * num);
-	i = 0;
 	philos_create(philos, info, num);
 	while (1)
 	{
 		i = 0;
+		counter = 0;
 		while (i < num)
 		{
 			if (philos[i].alive == false)
@@ -135,6 +135,8 @@ void	philos_dining(t_info *info, int num)
 				return ;
 			}
 			if (philos[i].done == true)
+				counter++;
+			if (counter == num)
 			{
 				philos_free(philos, num);
 				return ;
@@ -142,7 +144,6 @@ void	philos_dining(t_info *info, int num)
 			i++;
 		}
 	}
-	philos_free(philos, num);
 }
 
 int	main(int argc, char **argv)
