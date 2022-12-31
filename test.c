@@ -30,10 +30,13 @@ void	philo_forks_get(t_philo *philo, __darwin_suseconds_t timestamp)
 		printf("%dms %d has taken a fork\n", timestamp, philo->num);
 		printf("%dms %d is eating\n", timestamp, philo->num);
 		usleep(philo->info->eat_time);
+		pthread_mutex_unlock(philo->fork);
 		printf("%dms %d is sleeping\n", timestamp, philo->num);
 		usleep(philo->info->sleep_time);
 	}
-	pthread_mutex_unlock(philo->fork);
+	else
+		pthread_mutex_unlock(philo->fork);
+	
 }
 
 void	*philo_routine(void *arg)
@@ -94,7 +97,6 @@ void	philos_kill(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
-		write(1, "y",1);
 		philos[i].alive = false;
 		i++;
 	}
@@ -107,8 +109,9 @@ void	philos_free(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
-			write(1, "x",1);
+		write(1, "x",1);
 		pthread_join(philos[i].thread, NULL);
+		write(1, "y",1);
 		i++;
 	}
 	// free(philos);
