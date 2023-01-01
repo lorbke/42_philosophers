@@ -4,20 +4,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include "ft_strtoi.h"
 
 typedef struct s_info
 {
-	int	starve_time;
-	int	eat_time;
-	int	sleep_time;
-	int	eat_count;
+	int				starve_time;
+	int				eat_time;
+	int				sleep_time;
+	int				eat_count;
+	long int		start_time;
+	bool			alive;
 	pthread_mutex_t	master;
 }	t_info;
 
 typedef struct s_philo
 {
 	int				num;
-	bool			alive;
 	bool			done;
 	t_info			*info;
 	pthread_mutex_t	fork_r;
@@ -30,26 +32,28 @@ int	get_time(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return (time.tv_usec / 1000);
+	return ((time.tv_usec / 1000 + time.tv_sec * 1000));
 }
 
-bool	philo_check_death(t_philo *philo, int timestamp)
+bool	philo_check_death(t_philo *philo, int last_meal)
 {
 	pthread_mutex_lock(&philo->info->master);
-	if (philo->alive == false)
+	if (philo->info->alive == false)
 	{
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&philo->info->master);
 		return (true);
 	}
-	if (get_time() - timestamp > philo->info->starve_time)
+	if (get_time() - philo->info->start_time - last_meal
+		> philo->info->starve_time)
 	{
-		philo->alive = false;
+		philo->info->alive = false;
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&philo->info->master);
-		printf("----------------%dms %d died\n", timestamp, philo->num);
+		printf("----------------%ldms %d died\n", get_time()
+			- philo->info->start_time, philo->num);
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->info->master);
@@ -58,45 +62,49 @@ bool	philo_check_death(t_philo *philo, int timestamp)
 
 void	*philo_routine(void *arg)
 {
-	t_philo					*philo;
-	struct timeval			time;
-	int						timestamp;
-	int						i;
+	t_philo			*philo;
+	struct timeval	time;
+	long int		timestamp;
+	long int		last_meal;
+	int				i;
 
 	philo = (t_philo *)arg;
 	i = 0;
-	timestamp = get_time();
-	while (i < philo->info->eat_count)
+	timestamp = philo->info->start_time;
+	last_meal = timestamp;
+	while (1)
 	{
-		if (philo_check_death(philo, timestamp) == true)
+		if (philo->info->eat_count != -1 && i == philo->info->eat_count)
+			break ;
+		if (philo_check_death(philo, last_meal) == true)
 			return (NULL);
-		timestamp = get_time();
+		timestamp = get_time() - philo->info->start_time;
+		// left first if odd, right first if even
+		printf("%ldms %d is thinking\n", timestamp, philo->num);
 		pthread_mutex_lock(&philo->fork_r);
-		if (philo_check_death(philo, timestamp) == true)
+		if (philo_check_death(philo, last_meal) == true)
 			return (NULL);
-		timestamp = get_time();
-		printf("%dms %d has taken a fork\n", timestamp, philo->num);
+		timestamp = get_time() - philo->info->start_time;
+		printf("%ldms %d has taken a fork\n", timestamp, philo->num);
 		pthread_mutex_lock(philo->fork_l);
-		if (philo_check_death(philo, timestamp) == true)
+		if (philo_check_death(philo, last_meal) == true)
 			return (NULL);
-		timestamp = get_time();
-		printf("%dms %d has taken a fork\n", timestamp, philo->num);
-		if (philo_check_death(philo, timestamp) == true)
+		timestamp = get_time() - philo->info->start_time;
+		printf("%ldms %d has taken a fork\n", timestamp, philo->num);
+		printf("%ldms %d is eating\n", timestamp, philo->num);
+		last_meal = timestamp;
+		usleep(philo->info->eat_time - philo->info->eat_time / 10);
+		while (get_time() - philo->info->start_time - timestamp
+			< philo->info->eat_time / 1000);
+		if (philo_check_death(philo, last_meal) == true)
 			return (NULL);
-		timestamp = get_time();
-		printf("%dms %d is eating\n", timestamp, philo->num);
-		usleep(philo->info->eat_time);
-		if (philo_check_death(philo, timestamp) == true)
-			return (NULL);
-		timestamp = get_time();
+		timestamp = get_time() - philo->info->start_time;
 		pthread_mutex_unlock(&philo->fork_r);
 		pthread_mutex_unlock(philo->fork_l);
-		printf("%dms %d is sleeping\n", timestamp, philo->num);
-		usleep(philo->info->sleep_time);
-		if (philo_check_death(philo, timestamp) == true)
-			return (NULL);
-		timestamp = get_time();
-		printf("%dms %d is thinking\n", timestamp, philo->num);
+		printf("%ldms %d is sleeping\n", timestamp, philo->num);
+		usleep(philo->info->sleep_time - philo->info->sleep_time / 10);
+		while (get_time() - philo->info->start_time - timestamp
+			< philo->info->sleep_time / 1000);
 		i++;
 	}
 	pthread_mutex_lock(&philo->info->master);
@@ -113,27 +121,11 @@ void	philos_create(t_philo *philos, t_info *info, int num)
 	while (i < num)
 	{
 		philos[i].num = i + 1;
-		philos[i].alive = true;
 		philos[i].done = false;
 		philos[i].info = info;
 		pthread_mutex_init(&philos[(i + 1) % num].fork_r, NULL);
 		philos[i].fork_l = &philos[(i + 1) % num].fork_r;
-		if (pthread_create(&philos[i].thread, NULL, &philo_routine, &philos[i]) != 0)
-			printf("error %d\n", i + 1);
-		i++;
-	}
-}
-
-void	philos_kill(t_philo *philos, int num)
-{
-	int	i;
-
-	i = 0;
-	while (i < num)
-	{
-		pthread_mutex_lock(&philos[i].info->master);
-		philos[i].alive = false;
-		pthread_mutex_unlock(&philos[i].info->master);
+		pthread_create(&philos[i].thread, NULL, &philo_routine, &philos[i]);
 		i++;
 	}
 }
@@ -148,7 +140,7 @@ void	philos_free(t_philo *philos, int num)
 		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
-	// free(philos);
+	free(philos);
 }
 
 void	philos_dining(t_info *info, int num)
@@ -157,34 +149,39 @@ void	philos_dining(t_info *info, int num)
 	int				i;
 	int				counter;
 
+	info->start_time = get_time();
 	philos = malloc(sizeof(t_philo) * num);
 	philos_create(philos, info, num);
 	while (1)
 	{
+		pthread_mutex_lock(&info->master);
 		i = 0;
 		counter = 0;
 		while (i < num)
 		{
-			pthread_mutex_lock(&philos[i].info->master);
-			if (philos[i].alive == false)
-			{
-				pthread_mutex_unlock(&philos[i].info->master);
-				philos_kill(philos, num);
-				philos_free(philos, num);
-				return ;
-			}
 			if (philos[i].done == true)
 				counter++;
-			pthread_mutex_unlock(&philos[i].info->master);
-			if (counter == num)
-			{
-				philos_free(philos, num);
-				return ;
-			}
 			i++;
 		}
-		// write(1, "1", 1);
+		if (info->alive == false || counter == num)
+			break ;
+		pthread_mutex_unlock(&info->master);
 	}
+	pthread_mutex_unlock(&info->master);
+	philos_free(philos, num);
+}
+
+void	info_init(t_info *info, int argc, char **argv)
+{
+	info->starve_time = ft_strtoi(argv[2], NULL, 10);
+	info->eat_time = ft_strtoi(argv[3], NULL, 10) * 1000;
+	info->sleep_time = ft_strtoi(argv[4], NULL, 10) * 1000;
+	info->alive = true;
+	if (argc == 6)
+		info->eat_count = ft_strtoi(argv[5], NULL, 10);
+	else
+		info->eat_count = -1;
+	pthread_mutex_init(&info->master, NULL);
 }
 
 int	main(int argc, char **argv)
@@ -193,13 +190,12 @@ int	main(int argc, char **argv)
 	t_philo			philo;
 	t_philo			philo2;
 
-	info.starve_time = atoi(argv[2]);
-	info.eat_time = atoi(argv[3]) * 1000;
-	info.sleep_time = atoi(argv[4]) * 1000;
-	info.eat_count = atoi(argv[5]);
-	pthread_mutex_init(&info.master, NULL);
-
+	if (argc < 5 || argc > 6)
+	{
+		write(2, "Error: wrong number of arguments\n", 33);
+		return (1);
+	}
+	info_init(&info, argc, argv);
 	philos_dining(&info, atoi(argv[1]));
-
 	return (0);
 }
