@@ -11,6 +11,7 @@ typedef struct s_info
 	int	eat_time;
 	int	sleep_time;
 	int	eat_count;
+	pthread_mutex_t	master;
 }	t_info;
 
 typedef struct s_philo
@@ -34,12 +35,24 @@ int	get_time(void)
 
 bool	philo_check_death(t_philo *philo, int timestamp)
 {
+	pthread_mutex_lock(&philo->info->master);
+	if (philo->alive == false)
+	{
+		pthread_mutex_unlock(&philo->fork_r);
+		pthread_mutex_unlock(philo->fork_l);
+		pthread_mutex_unlock(&philo->info->master);
+		return (true);
+	}
 	if (get_time() - timestamp > philo->info->starve_time)
 	{
 		philo->alive = false;
+		pthread_mutex_unlock(&philo->fork_r);
+		pthread_mutex_unlock(philo->fork_l);
+		pthread_mutex_unlock(&philo->info->master);
 		printf("----------------%dms %d died\n", timestamp, philo->num);
 		return (true);
 	}
+	pthread_mutex_unlock(&philo->info->master);
 	return (false);
 }
 
@@ -55,10 +68,18 @@ void	*philo_routine(void *arg)
 	timestamp = get_time();
 	while (i < philo->info->eat_count)
 	{
-		printf("%dms %d is thinking\n", timestamp, philo->num);
+		if (philo_check_death(philo, timestamp) == true)
+			return (NULL);
+		timestamp = get_time();
 		pthread_mutex_lock(&philo->fork_r);
+		if (philo_check_death(philo, timestamp) == true)
+			return (NULL);
+		timestamp = get_time();
 		printf("%dms %d has taken a fork\n", timestamp, philo->num);
 		pthread_mutex_lock(philo->fork_l);
+		if (philo_check_death(philo, timestamp) == true)
+			return (NULL);
+		timestamp = get_time();
 		printf("%dms %d has taken a fork\n", timestamp, philo->num);
 		if (philo_check_death(philo, timestamp) == true)
 			return (NULL);
@@ -72,15 +93,15 @@ void	*philo_routine(void *arg)
 		pthread_mutex_unlock(philo->fork_l);
 		printf("%dms %d is sleeping\n", timestamp, philo->num);
 		usleep(philo->info->sleep_time);
+		if (philo_check_death(philo, timestamp) == true)
+			return (NULL);
+		timestamp = get_time();
+		printf("%dms %d is thinking\n", timestamp, philo->num);
 		i++;
 	}
-	pthread_mutex_lock(&philo->fork_r);
-	pthread_mutex_lock(philo->fork_l);
-	// printf("-- %p\n", &philo->fork_r);
-	// printf("-- %p\n", philo);
+	pthread_mutex_lock(&philo->info->master);
 	philo->done = true;
-	pthread_mutex_unlock(&philo->fork_r);
-	pthread_mutex_unlock(philo->fork_l);
+	pthread_mutex_unlock(&philo->info->master);
 	return (NULL);
 }
 
@@ -110,11 +131,9 @@ void	philos_kill(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
-		pthread_mutex_lock(&philos[i].fork_r);
-		pthread_mutex_lock(philos[i].fork_l);
+		pthread_mutex_lock(&philos[i].info->master);
 		philos[i].alive = false;
-		pthread_mutex_unlock(&philos[i].fork_r);
-		pthread_mutex_unlock(philos[i].fork_l);
+		pthread_mutex_unlock(&philos[i].info->master);
 		i++;
 	}
 }
@@ -146,21 +165,17 @@ void	philos_dining(t_info *info, int num)
 		counter = 0;
 		while (i < num)
 		{
-			pthread_mutex_lock(&philos[i].fork_r);
-			pthread_mutex_lock(philos[i].fork_l);
+			pthread_mutex_lock(&philos[i].info->master);
 			if (philos[i].alive == false)
 			{
+				pthread_mutex_unlock(&philos[i].info->master);
 				philos_kill(philos, num);
 				philos_free(philos, num);
 				return ;
 			}
-			// printf("%p\n", &philos[i].fork_r);
-			// printf("%p\n", &philos[i]);
-			// exit(0);
 			if (philos[i].done == true)
 				counter++;
-			pthread_mutex_unlock(&philos[i].fork_r);
-			pthread_mutex_unlock(philos[i].fork_l);
+			pthread_mutex_unlock(&philos[i].info->master);
 			if (counter == num)
 			{
 				philos_free(philos, num);
@@ -182,6 +197,7 @@ int	main(int argc, char **argv)
 	info.eat_time = atoi(argv[3]) * 1000;
 	info.sleep_time = atoi(argv[4]) * 1000;
 	info.eat_count = atoi(argv[5]);
+	pthread_mutex_init(&info.master, NULL);
 
 	philos_dining(&info, atoi(argv[1]));
 
