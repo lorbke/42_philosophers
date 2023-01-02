@@ -92,3 +92,18 @@ Data Management
 - Killer
 	- kills all threads if a philo dies
 		- how to check for death?
+
+
+
+
+
+
+----------Learnings-----------
+
+- be more focused during implementation to get better structure from the beginning 
+- thread handling
+- data races prevention
+- lldb usage
+- helgrind usage
+- enum and typedef usage
+- using headers to split a project in logic blocks with only certain functions available outside
