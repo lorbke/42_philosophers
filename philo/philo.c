@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 19:17:17 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 19:43:39 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ static void	forever_alone(t_info *info)
 	printf("\033[31m%ldms %d %s\033[0m\n", info->starve_time + 1, 1, DIE);
 }
 
+// time management
+// helgrind etc.
+
 int	main(int argc, char **argv)
 {
 	t_info			info;
@@ -66,6 +69,6 @@ int	main(int argc, char **argv)
 		write(2, "Error: number of philosophers must be greater than 0\n", 52);
 		return (1);
 	}
-	philos_dining(&info, philo_num);
+	waiter_dining(&info, philo_num);
 	return (0);
 }

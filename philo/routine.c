@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:22:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 18:53:06 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 19:41:50 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	philo_eat(t_philo *philo)
 	printf("%ldms %d %s\n", get_time() - philo->info->start_time,
 		philo->num, EAT);
 	philo->last_meal = get_time() - philo->info->start_time;
-	if (philo->info->starve_time < philo->info->eat_time)
+	if (philo->info->starve_time * 1000 < philo->info->eat_time)
 		sniper_usleep(philo->info->starve_time + 3000);
 	else
 		sniper_usleep(philo->info->eat_time);
@@ -57,7 +57,7 @@ void	philo_sleep(t_philo *philo)
 {
 	printf("%ldms %d %s\n", get_time() - philo->info->start_time,
 		philo->num, SLEEP);
-	if (philo->info->starve_time < philo->info->sleep_time)
+	if (philo->info->starve_time * 1000 < philo->info->sleep_time)
 		sniper_usleep(philo->info->starve_time + 3000);
 	else
 		sniper_usleep(philo->info->sleep_time);
@@ -71,7 +71,7 @@ void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	meals = 0;
-	philo->last_meal = philo->info->start_time;
+	philo->last_meal = get_time() - philo->info->start_time;
 	while (1)
 	{
 		if (philo->info->meal_count != -1 && meals == philo->info->meal_count)
@@ -80,7 +80,7 @@ void	*philo_routine(void *arg)
 		while (i < ACTION_COUNT)
 		{
 			philo->info->func_action[i](philo);
-			if (philo_check_death(philo))
+			if (waiter_check_death(philo))
 			{
 				pthread_mutex_unlock(&philo->fork_r);
 				pthread_mutex_unlock(philo->fork_l);

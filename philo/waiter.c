@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:20:49 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 18:58:56 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 19:35:58 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	philos_create(t_philo *philos, t_info *info, int num)
 	}
 }
 
-bool	philo_check_death(t_philo *philo)
+bool	waiter_check_death(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->info->master);
 	if (philo->info->alive == false)
@@ -65,7 +65,7 @@ bool	philo_check_death(t_philo *philo)
 	return (false);
 }
 
-void	philos_dining(t_info *info, int num)
+void	waiter_dining(t_info *info, int num)
 {
 	t_philo			*philos;
 	int				i;

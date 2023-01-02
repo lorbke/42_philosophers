@@ -6,13 +6,13 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/22 16:03:56 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/02 19:08:19 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/02 19:38:29 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-CC = cc #-Wall -Wextra -Werror
+CC = cc -Wall -Wextra -Werror
 
 STRTOI_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isspace.c ft_safeadd.c \
 ft_safemult.c ft_strtoi.c

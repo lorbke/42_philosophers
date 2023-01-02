@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:23:47 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 18:36:10 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 19:35:58 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
 void	*philo_routine(void *arg);
 
-bool	philo_check_death(t_philo *philo);
-void	philos_dining(t_info *info, int num);
+bool	waiter_check_death(t_philo *philo);
+void	waiter_dining(t_info *info, int num);
 
 t_ms	get_time(void);
 void	sniper_usleep(t_ms time);
