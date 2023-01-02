@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:20:49 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 19:35:58 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 20:22:32 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,32 @@ static void	join_free_destroy(t_philo *philos, int num)
 	i = 0;
 	while (i < num)
 	{
-		pthread_mutex_destroy(&philos[i].fork_r);
 		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
+	while (--i >= 0)
+		pthread_mutex_destroy(&philos[i].fork_r);
+	pthread_mutex_destroy(&philos[0].info->master);
 	free(philos);
 }
 
-static void	philos_create(t_philo *philos, t_info *info, int num)
+static void	waiter_open_diner(t_philo *philos, t_info *info, int num)
 {
 	int	i;
 
+	pthread_mutex_init(&info->master, NULL);
+	i = 0;
+	while (i < num)
+	{
+		pthread_mutex_init(&philos[i].fork_r, NULL);
+		i++;
+	}
 	i = 0;
 	while (i < num)
 	{
 		philos[i].num = i + 1;
 		philos[i].done = false;
 		philos[i].info = info;
-		pthread_mutex_init(&philos[(i + 1) % num].fork_r, NULL);
 		philos[i].fork_l = &philos[(i + 1) % num].fork_r;
 		pthread_create(&philos[i].thread, NULL, &philo_routine, &philos[i]);
 		usleep(100);
@@ -56,9 +64,9 @@ bool	waiter_check_death(t_philo *philo)
 		> philo->info->starve_time)
 	{
 		philo->info->alive = false;
-		pthread_mutex_unlock(&philo->info->master);
 		printf("\033[31m%ldms %d %s\033[0m\n", get_time()
 			- philo->info->start_time, philo->num, DIE);
+		pthread_mutex_unlock(&philo->info->master);
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->info->master);
@@ -73,7 +81,7 @@ void	waiter_dining(t_info *info, int num)
 
 	info->start_time = get_time();
 	philos = malloc(sizeof(t_philo) * num);
-	philos_create(philos, info, num);
+	waiter_open_diner(philos, info, num);
 	while (1)
 	{
 		pthread_mutex_lock(&info->master);

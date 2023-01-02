@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 19:43:39 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/02 20:13:39 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	info_init(t_info *info, int argc, char **argv)
 	info->starve_time = ft_strtoi(argv[2], NULL, 10);
 	info->eat_time = ft_strtoi(argv[3], NULL, 10) * 1000;
 	info->sleep_time = ft_strtoi(argv[4], NULL, 10) * 1000;
+	info->meal_count = 0;
 	if (argc == 6)
 		info->meal_count = ft_strtoi(argv[5], NULL, 10);
 	if (info->starve_time < 0 || info->eat_time < 0
@@ -28,7 +29,6 @@ static int	info_init(t_info *info, int argc, char **argv)
 	if (argc == 5)
 		info->meal_count = -1;
 	info->alive = true;
-	pthread_mutex_init(&info->master, NULL);
 	info->func_action[0] = &philo_take_forks;
 	info->func_action[1] = &philo_eat;
 	info->func_action[2] = &philo_sleep;
@@ -43,8 +43,9 @@ static void	forever_alone(t_info *info)
 	printf("\033[31m%ldms %d %s\033[0m\n", info->starve_time + 1, 1, DIE);
 }
 
-// time management
+// time management and overflows (*1000 problem)
 // helgrind etc.
+// object oriented headers
 
 int	main(int argc, char **argv)
 {

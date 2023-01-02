@@ -6,27 +6,33 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/22 16:03:56 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/02 19:38:29 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/02 19:51:15 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# name macros
 NAME = philo
 
-CC = cc -Wall -Wextra -Werror
+# command macros
+CC = cc -Wall -Wextra -Werror -g -pthread
 
+# src and obj files macros
 STRTOI_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isspace.c ft_safeadd.c \
 ft_safemult.c ft_strtoi.c
 SRC = time.c routine.c waiter.c philo.c
 OBJ = $(SRC:.c=.o) $(STRTOI_SRC:.c=.o)
 
+# default target
 all: $(NAME)
 
+# file targets
 %.o: %.c
 	$(CC) -c $< -o $@
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
 
+# phony targets
 bonus: re
 
 clean:
