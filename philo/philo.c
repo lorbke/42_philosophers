@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 20:13:39 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 17:26:45 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	info_init(t_info *info, int argc, char **argv)
 {
+	info->philo_count = ft_strtoi(argv[1], NULL, 10);
 	info->starve_time = ft_strtoi(argv[2], NULL, 10);
 	info->eat_time = ft_strtoi(argv[3], NULL, 10) * 1000;
 	info->sleep_time = ft_strtoi(argv[4], NULL, 10) * 1000;
@@ -44,13 +45,14 @@ static void	forever_alone(t_info *info)
 }
 
 // time management and overflows (*1000 problem)
-// helgrind etc.
+// helgrind and drd check
+// function renaming
 // object oriented headers
+// norminette
 
 int	main(int argc, char **argv)
 {
 	t_info			info;
-	int				philo_num;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -59,17 +61,16 @@ int	main(int argc, char **argv)
 	}
 	if (info_init(&info, argc, argv) == 1)
 		return (1);
-	philo_num = ft_strtoi(argv[1], NULL, 10);
-	if (philo_num == 1)
+	if (info.philo_count == 1)
 	{
 		forever_alone(&info);
 		return (0);
 	}
-	else if (philo_num < 1)
+	else if (info.philo_count < 1)
 	{
 		write(2, "Error: number of philosophers must be greater than 0\n", 52);
 		return (1);
 	}
-	waiter_dining(&info, philo_num);
+	waiter_open_diner(&info);
 	return (0);
 }
