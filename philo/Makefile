@@ -6,7 +6,7 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/22 16:03:56 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/03 17:51:11 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/03 21:02:17 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,12 +14,12 @@
 NAME = philo
 
 # command macros
-CC = cc -Wall -Wextra -Werror -g -pthread
+CC = gcc -Wall -Wextra -Werror -g -pthread
 
 # src and obj files macros
 STRTOI_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isspace.c ft_safeadd.c \
 ft_safemult.c ft_strtoi.c
-SRC = time.c philosophers.c philosophers_utils.c waiter.c philo.c
+SRC = time.c philosophers.c philosophers_utils.c waiter.c waiter_mutex.c philo.c
 OBJ = $(SRC:.c=.o) $(STRTOI_SRC:.c=.o)
 
 # default target

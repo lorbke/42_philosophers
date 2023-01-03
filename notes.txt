@@ -100,6 +100,7 @@ Data Management
 
 ----------Learnings-----------
 
+- project structure should be more object oriented and modeled to make understanding easier
 - be more focused during implementation to get better structure from the beginning 
 - thread handling
 - data races prevention

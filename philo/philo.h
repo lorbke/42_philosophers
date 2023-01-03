@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:23:47 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 17:12:05 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 21:16:11 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,14 @@ struct s_philo
 {
 	t_info			*info;
 	int				num;
-	bool			done;
+	bool			fed;
+	bool			status;
 	t_ms			last_meal;
 	pthread_mutex_t	fork_r;
 	pthread_mutex_t	*fork_l;
+	pthread_mutex_t	status_mutex;
+	pthread_mutex_t	eat_mutex;
+	pthread_mutex_t	fed_mutex;
 	pthread_t		thread;
 };
 
@@ -57,8 +61,7 @@ struct s_info
 	t_ms			sleep_time;
 	int				meal_count;
 	t_ms			start_time;
-	bool			alive;
-	pthread_mutex_t	master;
+	pthread_mutex_t	print_mutex;
 	t_func_action	func_action[ACTION_COUNT];
 };
 
@@ -72,6 +75,8 @@ void	philo_print(t_philo *philo, char *str);
 void	*philo_routine(void *arg);
 
 void	waiter_open_diner(t_info *info);
+
+void	*waiter_routine(void *arg);
 
 t_ms	get_time(void);
 void	sniper_usleep(t_ms time);

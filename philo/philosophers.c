@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:22:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 17:41:36 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 21:15:59 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,25 @@
 
 static bool	philo_check_death(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->info->master);
-	if (philo->info->alive == false)
+	pthread_mutex_lock(&philo->status_mutex);
+	if (philo->status == false)
 	{
-		pthread_mutex_unlock(&philo->info->master);
+		pthread_mutex_unlock(&philo->status_mutex);
 		return (true);
 	}
-	pthread_mutex_unlock(&philo->info->master);
+	pthread_mutex_unlock(&philo->status_mutex);
 	return (false);
 }
 
 void	philo_print(t_philo *philo, char *str)
 {
 	if (!philo_check_death(philo))
+	{
+		pthread_mutex_lock(&philo->info->print_mutex);
 		printf("%ldms %d %s\n", get_time() - philo->info->start_time,
 			philo->num, str);
+		pthread_mutex_unlock(&philo->info->print_mutex);
+	}
 }
 
 void	*philo_routine(void *arg)
@@ -38,7 +42,8 @@ void	*philo_routine(void *arg)
 	int				meals;
 
 	philo = (t_philo *)arg;
-	philo->last_meal = get_time() - philo->info->start_time;
+	if (philo->num % 2 == 0)
+		sniper_usleep(philo->info->eat_time / 2);
 	meals = 0;
 	while (!philo_check_death(philo))
 	{
@@ -52,8 +57,8 @@ void	*philo_routine(void *arg)
 		}
 		meals++;
 	}
-	pthread_mutex_lock(&philo->info->master);
-	philo->done = true;
-	pthread_mutex_unlock(&philo->info->master);
+	pthread_mutex_lock(&philo->fed_mutex);
+	philo->fed = true;
+	pthread_mutex_unlock(&philo->fed_mutex);
 	return (NULL);
 }

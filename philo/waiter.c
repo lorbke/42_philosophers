@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:20:49 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 18:01:38 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 21:17:59 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,57 +24,26 @@ static void	waiter_clean_up(pthread_t *waiter, t_philo *philos)
 		i++;
 	}
 	while (--i >= 0)
+	{
 		pthread_mutex_destroy(&philos[i].fork_r);
-	pthread_mutex_destroy(&philos[0].info->master);
+		pthread_mutex_destroy(&philos[i].status_mutex);
+		pthread_mutex_destroy(&philos[i].eat_mutex);
+		pthread_mutex_destroy(&philos[i].fed_mutex);
+	}
+	pthread_mutex_destroy(&philos[0].info->print_mutex);
 	free(philos);
-}
-
-static bool	waiter_check_death(t_philo *philo)
-{
-	if (get_time() - philo->info->start_time - philo->last_meal
-		> philo->info->starve_time)
-	{
-		philo->info->alive = false;
-		printf("\033[31m%ldms %d %s\033[0m\n", get_time()
-			- philo->info->start_time, philo->num, DIE);
-		return (true);
-	}
-	return (false);
-}
-
-static void	*waiter_routine(void *arg)
-{
-	t_philo			*philos;
-	int				i;
-	int				counter;
-
-	philos = (t_philo *)arg;
-	while (1)
-	{
-		pthread_mutex_lock(&philos[0].info->master);
-		i = 0;
-		counter = 0;
-		while (i < philos[0].info->philo_count
-			&& !waiter_check_death(&philos[i]))
-		{
-			if (philos[i].done == true)
-				counter++;
-			i++;
-		}
-		if (counter == philos[0].info->philo_count || !philos[0].info->alive)
-			break ;
-		pthread_mutex_unlock(&philos[0].info->master);
-	}
-	pthread_mutex_unlock(&philos[0].info->master);
-	return (NULL);
 }
 
 static void	waiter_philo_init(t_info *info, t_philo *philo, int num)
 {
 	philo->num = num;
-	philo->done = false;
+	philo->status = true;
 	philo->info = info;
 	philo->last_meal = 0;
+	pthread_mutex_init(&philo->fork_r, NULL);
+	pthread_mutex_init(&philo->status_mutex, NULL);
+	pthread_mutex_init(&philo->eat_mutex, NULL);
+	pthread_mutex_init(&philo->fed_mutex, NULL);
 }
 
 void	waiter_open_diner(t_info *info)
@@ -84,10 +53,6 @@ void	waiter_open_diner(t_info *info)
 	int			i;
 
 	philos = malloc(sizeof(t_philo) * info->philo_count);
-	pthread_mutex_init(&info->master, NULL);
-	i = 0;
-	while (i < info->philo_count)
-		pthread_mutex_init(&philos[i++].fork_r, NULL);
 	info->start_time = get_time();
 	i = 0;
 	while (i < info->philo_count)

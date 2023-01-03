@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 17:59:55 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 21:16:57 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	info_init(t_info *info, int argc, char **argv)
 	}
 	if (argc == 5)
 		info->meal_count = -1;
-	info->alive = true;
+	pthread_mutex_init(&info->print_mutex, NULL);
 	info->func_action[0] = &philo_take_forks;
 	info->func_action[1] = &philo_eat;
 	info->func_action[2] = &philo_sleep;
@@ -46,7 +46,8 @@ static void	forever_alone(t_info *info)
 
 // time management and overflows (*1000 problem)
 // helgrind and drd check
-// function renaming
+// function renaming (waiter -> 
+// initializer, after that create waiter and philos)
 
 int	main(int argc, char **argv)
 {
