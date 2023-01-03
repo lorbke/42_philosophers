@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:07:45 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/02 19:07:58 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 18:14:52 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@ t_ms	get_time(void)
 void	sniper_usleep(t_ms time)
 {
 	t_ms	wake_up;
+	t_ms	temp;
 
 	wake_up = get_time() + time / 1000;
-	usleep(time - time / 10);
+	temp = time - 5000;
+	if (temp > 0)
+		usleep(temp);
 	while (wake_up > get_time())
 		;
 }

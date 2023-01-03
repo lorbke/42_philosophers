@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 17:26:45 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 17:59:55 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ static void	forever_alone(t_info *info)
 // time management and overflows (*1000 problem)
 // helgrind and drd check
 // function renaming
-// object oriented headers
-// norminette
 
 int	main(int argc, char **argv)
 {

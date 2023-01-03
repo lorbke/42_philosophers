@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:20:49 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 17:48:20 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/03 18:01:38 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static bool	waiter_check_death(t_philo *philo)
 	return (false);
 }
 
-void	*waiter_routine(void *arg)
+static void	*waiter_routine(void *arg)
 {
 	t_philo			*philos;
 	int				i;
