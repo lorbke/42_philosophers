@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "waiter.h"
+#include "waitress.h"
 # include "philo.h" // t_info, t_philo
 #include <pthread.h> // pthread_mutex_lock, pthread_mutex_unlock
 #include <stdio.h> // printf
@@ -46,7 +46,7 @@ static void	kill_philos(t_philo *philos)
 	}
 }
 
-void	*waiter_routine(void *arg)
+void	*waitress_routine(void *arg)
 {
 	t_philo			*philos;
 	int				i;

@@ -3,6 +3,6 @@
 # define WAITER_H
 
 /* PROTOTYPES */
-void	*waiter_routine(void *arg);
+void	*waitress_routine(void *arg);
 
 #endif

@@ -12,7 +12,7 @@
 
 #include "ft_lib.h"
 #include "philo.h"
-#include "waiter.h"
+#include "waitress.h"
 #include "time.h"
 #include <unistd.h> // write
 #include <stdlib.h> // malloc
@@ -142,7 +142,7 @@ int	main(int argc, char **argv)
 	}
 	philos = malloc(sizeof(t_philo) * info.philo_count);
 	init_philos(&info, philos);
-	pthread_create(&waiter, NULL, &waiter_routine, philos);
+	pthread_create(&waiter, NULL, &waitress_routine, philos);
 	create_philos(philos);
 	clean_up(&waiter, philos);
 	return (0);
