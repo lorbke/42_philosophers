@@ -1,46 +1,44 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/04/22 16:03:56 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/03 21:02:17 by lorbke           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# name macros
+# name macro
 NAME = philo
 
 # command macros
-CC = gcc -Wall -Wextra -Werror -g -pthread
+CC = gcc
+RM = rm -f
+ADD_FLAGS = #-g -pthread -fsanitize=address,undefined
+FLAGS = -Wall -Wextra -Werror
+
+# path macros
+INC_PATH = includes
+OBJ_PATH = obj
+SRC_PATH = src
 
 # src and obj files macros
-STRTOI_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isspace.c ft_safeadd.c \
-ft_safemult.c ft_strtoi.c
-SRC = time.c philosophers.c philosophers_utils.c waiter.c waiter_mutex.c philo.c
-OBJ = $(SRC:.c=.o) $(STRTOI_SRC:.c=.o)
+SRC = $(wildcard $(SRC_PATH)/*/*.c)
+OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
-# default target
-all: $(NAME)
+# default rule
+default: makedir all
 
 # file targets
-%.o: %.c
-	$(CC) -c $< -o $@
+${NAME}: ${OBJ}
+	${CC} ${OBJ} -o ${NAME}
+	@echo "make: philo success!"
 
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/*/%.c
+	${CC} ${FLAGS} ${ADD_FLAGS} -I$(INC_PATH) -c $< -o $@
 
 # phony targets
-bonus: re
+all: ${NAME}
+
+makedir:
+	@mkdir -p $(OBJ_PATH)
 
 clean:
-	@/bin/rm -f $(OBJ)
+	${RM} -r $(OBJ_PATH)
 
 fclean: clean
-	@/bin/rm -f $(NAME)
+	@${RM} ${NAME}
 
-re: fclean all
+re: fclean makedir all
 
-.PHONY:	all clean fclean re
+.PHONY: all clean fclean re

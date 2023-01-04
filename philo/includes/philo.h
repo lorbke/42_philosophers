@@ -14,14 +14,10 @@
 # define PHILO_H
 
 /* INCLUDES */
-# include <pthread.h>
-# include <stdio.h>
-# include <sys/time.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <stdbool.h>
-# include <time.h>
-# include "ft_strtoi.h"
+# include "time.h" // t_ms
+# include <stddef.h> // size_t
+# include <pthread.h> // pthread_t, pthread_mutex_t
+# include <stdbool.h> // bool
 
 /* DEFINES */
 # define ACTION_COUNT 4
@@ -32,7 +28,6 @@
 # define DIE "died"
 
 /* TYPEDEFS */
-typedef long int		t_ms;
 typedef struct s_info	t_info;
 typedef struct s_philo	t_philo;
 typedef void			(*t_func_action)(t_philo *philo);
@@ -70,15 +65,7 @@ void	philo_take_forks(t_philo *philo);
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
-
-void	philo_print(t_philo *philo, char *str);
+void	print_action(t_philo *philo, char *str);
 void	*philo_routine(void *arg);
-
-void	waiter_open_diner(t_info *info);
-
-void	*waiter_routine(void *arg);
-
-t_ms	get_time(void);
-void	sniper_usleep(t_ms time);
 
 #endif

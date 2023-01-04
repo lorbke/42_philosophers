@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strtoi.h"
-#include <stdio.h>
+#include "ft_lib.h"
 
 static int	get_temp(const char c, int base)
 {

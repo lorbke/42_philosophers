@@ -1,20 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   ft_strtoi.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/22 17:19:56 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/01 21:50:57 by lorbke           ###   ########.fr       */
+/*   Created: 2023/01/01 21:49:27 by lorbke            #+#    #+#             */
+/*   Updated: 2023/01/01 21:59:08 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strtoi.h"
+#ifndef FT_LIB_H
+# define FT_LIB_H
 
-int	ft_isalnum(int c)
-{
-	if (ft_isalpha(c) > 0 || ft_isdigit(c) > 0)
-		return (1);
-	return (0);
-}
+/* INCLUDES */
+# include <errno.h>
+# include <limits.h>
+# include <stdlib.h>
+
+/* PROTOTYPES */
+int	ft_safemult(int a, int b);
+int	ft_safeadd(int a, int b);
+int	ft_isdigit(int c);
+int	ft_isspace(int c);
+int	ft_isdigit(int c);
+int	ft_isalnum(int c);
+int	ft_isalpha(int c);
+int	ft_strtoi(const char *str, const char **endptr, int base);
+
+#endif

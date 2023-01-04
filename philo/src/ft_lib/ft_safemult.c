@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_safemult.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/22 16:06:36 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/01 21:56:19 by lorbke           ###   ########.fr       */
+/*   Created: 2022/11/06 22:14:44 by lorbke            #+#    #+#             */
+/*   Updated: 2023/01/01 21:59:42 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strtoi.h"
+#include "ft_lib.h"
 
-int	ft_isalpha(int c)
+/* This function will multiply two given integers only 
+when there is no overflow or underflow occuring. */
+int	ft_safemult(int a, int b)
 {
-	if (c >= 97 && c <= 122)
-		return (2);
-	if (c >= 65 && c <= 90)
-		return (1);
-	return (0);
+	if (a == 0 || b == 0)
+		return (0);
+	if ((a < 0 || b < 0) && INT_MIN / a > b)
+	{
+		errno = ERANGE;
+		return (INT_MIN);
+	}
+	if (INT_MAX / a < b)
+	{
+		errno = ERANGE;
+		return (INT_MAX);
+	}
+	return (a * b);
 }

@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_safemult.c                                      :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/06 22:14:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/01 21:59:42 by lorbke           ###   ########.fr       */
+/*   Created: 2023/01/02 19:07:45 by lorbke            #+#    #+#             */
+/*   Updated: 2023/01/03 20:41:43 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strtoi.h"
+#include "time.h"
+#include <sys/time.h> // gettimeofday
+#include <unistd.h> // usleep
+#include <stddef.h> // NULL
 
-/* This function will multiply two given integers only 
-when there is no overflow or underflow occuring. */
-int	ft_safemult(int a, int b)
+t_ms	get_time(void)
 {
-	if (a == 0 || b == 0)
-		return (0);
-	if ((a < 0 || b < 0) && INT_MIN / a > b)
-	{
-		errno = ERANGE;
-		return (INT_MIN);
-	}
-	if (INT_MAX / a < b)
-	{
-		errno = ERANGE;
-		return (INT_MAX);
-	}
-	return (a * b);
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_usec / 1000 + time.tv_sec * 1000));
+}
+
+void	sniper_usleep(long time)
+{
+	t_ms	wake_up;
+
+	wake_up = get_time() + time / 1000;
+	while (get_time() < wake_up)
+		usleep(200);
 }

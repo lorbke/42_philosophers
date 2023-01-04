@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/06 16:33:05 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/01 21:52:01 by lorbke           ###   ########.fr       */
+/*   Created: 2022/03/22 17:19:56 by lorbke            #+#    #+#             */
+/*   Updated: 2023/01/01 21:50:57 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strtoi.h"
+#include "ft_lib.h"
 
-int	ft_isspace(int c)
+int	ft_isalnum(int c)
 {
-	if (c == '\t' || c == '\n' || c == '\v'
-		|| c == '\f' || c == '\r' || c == ' ')
+	if (ft_isalpha(c) > 0 || ft_isdigit(c) > 0)
 		return (1);
 	return (0);
 }

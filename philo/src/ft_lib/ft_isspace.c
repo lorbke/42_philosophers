@@ -1,30 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time.c                                             :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/02 19:07:45 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 20:41:43 by lorbke           ###   ########.fr       */
+/*   Created: 2022/11/06 16:33:05 by lorbke            #+#    #+#             */
+/*   Updated: 2023/01/01 21:52:01 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "ft_lib.h"
 
-t_ms	get_time(void)
+int	ft_isspace(int c)
 {
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_usec / 1000 + time.tv_sec * 1000));
-}
-
-void	sniper_usleep(long time)
-{
-	t_ms	wake_up;
-
-	wake_up = get_time() + time / 1000;
-	while (get_time() < wake_up)
-		usleep(200);
+	if (c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r' || c == ' ')
+		return (1);
+	return (0);
 }

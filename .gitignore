@@ -4,5 +4,5 @@ a.out
 a.out.dSYM
 mac
 mac.dSYM
-/philo/*.o
+/philo/obj
 /philo/philo

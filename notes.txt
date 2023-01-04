@@ -108,3 +108,4 @@ Data Management
 - helgrind usage
 - enum and typedef usage
 - using headers to split a project in logic blocks with only certain functions available outside
+- Makefile knowledge still limited

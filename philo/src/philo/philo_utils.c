@@ -14,12 +14,12 @@
 
 void	philo_think(t_philo *philo)
 {
-	philo_print(philo, THINK);
+	print_action(philo, THINK);
 }
 
 void	philo_eat(t_philo *philo)
 {
-	philo_print(philo, EAT);
+	print_action(philo, EAT);
 	pthread_mutex_lock(&philo->eat_mutex);
 	philo->last_meal = get_time() - philo->info->start_time;
 	pthread_mutex_unlock(&philo->eat_mutex);
@@ -33,21 +33,21 @@ void	philo_take_forks(t_philo *philo)
 	if (philo->num % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->fork_r);
-		philo_print(philo, FORK);
+		print_action(philo, FORK);
 		pthread_mutex_lock(philo->fork_l);
-		philo_print(philo, FORK);
+		print_action(philo, FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->fork_l);
-		philo_print(philo, FORK);
+		print_action(philo, FORK);
 		pthread_mutex_lock(&philo->fork_r);
-		philo_print(philo, FORK);
+		print_action(philo, FORK);
 	}
 }
 
 void	philo_sleep(t_philo *philo)
 {
-	philo_print(philo, SLEEP);
+	print_action(philo, SLEEP);
 	sniper_usleep(philo->info->sleep_time);
 }

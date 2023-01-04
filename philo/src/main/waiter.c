@@ -10,9 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "waiter.h"
+# include "philo.h" // t_info, t_philo
+#include <pthread.h> // pthread_mutex_lock, pthread_mutex_unlock
+#include <stdio.h> // printf
 
-static bool	waiter_check_death(t_philo *philo)
+static bool	check_death(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->eat_mutex);
 	if (get_time() - philo->info->start_time - philo->last_meal
@@ -29,7 +32,7 @@ static bool	waiter_check_death(t_philo *philo)
 	return (false);
 }
 
-static void	waiter_kill_philos(t_philo *philos)
+static void	kill_philos(t_philo *philos)
 {
 	int	i;
 
@@ -56,9 +59,9 @@ void	*waiter_routine(void *arg)
 		counter = 0;
 		while (i < philos[0].info->philo_count)
 		{
-			if (waiter_check_death(&philos[i]))
+			if (check_death(&philos[i]))
 			{
-				waiter_kill_philos(philos);
+				kill_philos(philos);
 				return (NULL);
 			}
 			if (philos[i].fed == true)

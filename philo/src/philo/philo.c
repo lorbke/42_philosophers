@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stdio.h>
 
-static bool	philo_check_death(t_philo *philo)
+static bool	check_death(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->status_mutex);
 	if (philo->status == false)
@@ -24,9 +25,9 @@ static bool	philo_check_death(t_philo *philo)
 	return (false);
 }
 
-void	philo_print(t_philo *philo, char *str)
+void	print_action(t_philo *philo, char *str)
 {
-	if (!philo_check_death(philo))
+	if (!check_death(philo))
 	{
 		pthread_mutex_lock(&philo->info->print_mutex);
 		printf("%ldms %d %s\n", get_time() - philo->info->start_time,
@@ -45,7 +46,7 @@ void	*philo_routine(void *arg)
 	if (philo->num % 2 == 0)
 		sniper_usleep(philo->info->eat_time / 2);
 	meals = 0;
-	while (!philo_check_death(philo))
+	while (!check_death(philo))
 	{
 		if (philo->info->meal_count != -1 && meals == philo->info->meal_count)
 			break ;
