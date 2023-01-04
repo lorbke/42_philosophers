@@ -6,7 +6,7 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 15:11:52 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/04 15:11:55 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/04 20:07:41 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ default: makedir all
 
 # file targets
 ${NAME}: ${OBJ}
-	${CC} ${OBJ} -o ${NAME}
+	${CC} ${FLAGS} ${ADD_FLAGS} ${OBJ} -o ${NAME}
 	@echo "make: philo success!"
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/*/%.c
