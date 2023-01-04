@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:12:10 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 15:12:14 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:11:34 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define TIME_H
 
 /* TYPEDEFS */
-typedef long int		t_ms;
+typedef long long		t_ms;
 
 /* PROTOTYPES */
 t_ms	get_time(void);
-void	sniper_usleep(long time);
+void	sniper_usleep(t_ms time);
 
 #endif

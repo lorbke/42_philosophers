@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.c                                     :+:      :+:    :+:   */
+/*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:22:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 21:15:59 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:12:46 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	print_action(t_philo *philo, char *str)
 	if (!check_death(philo))
 	{
 		pthread_mutex_lock(&philo->info->print_mutex);
-		printf("%ldms %d %s\n", get_time() - philo->info->start_time,
+		printf("%lldms %d %s\n", get_time() - philo->info->start_time,
 			philo->num, str);
 		pthread_mutex_unlock(&philo->info->print_mutex);
 	}

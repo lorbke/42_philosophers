@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:07:45 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 20:41:43 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:12:04 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_ms	get_time(void)
 	return ((time.tv_usec / 1000 + time.tv_sec * 1000));
 }
 
-void	sniper_usleep(long time)
+void	sniper_usleep(t_ms time)
 {
 	t_ms	wake_up;
 

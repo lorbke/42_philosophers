@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 15:13:27 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:13:28 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static void	forever_alone(t_info *info)
 		return ;
 	printf("%dms %d %s\n", 0, 1, FORK);
 	sniper_usleep(info->starve_time);
-	printf("\033[31m%ldms %d %s\033[0m\n", info->starve_time + 1, 1, DIE);
+	printf("\033[31m%lldms %d %s\033[0m\n", info->starve_time + 1, 1, DIE);
 }
 
 int	main(int argc, char **argv)
