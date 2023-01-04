@@ -6,12 +6,12 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 14:09:38 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 14:21:29 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "waitress.h"
-#include "philo.h" // t_info, t_philo
+#include "philo.h" // t_info, t_philo, DIE
 #include <pthread.h> // pthread_mutex_lock, pthread_mutex_unlock
 #include <stdio.h> // printf
 
