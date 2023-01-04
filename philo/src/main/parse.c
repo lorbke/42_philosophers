@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:05:29 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 15:13:22 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/04 18:14:58 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ static int	check_args(int argc, char **argv)
 {
 	int	count;
 
-	count = ft_strtoi(argv[1], NULL, 10);
 	if (argc < 5 || argc > 6)
 	{
 		write(2, "Error: wrong number of arguments\n", 33);
 		return (1);
 	}
+	count = ft_strtoi(argv[1], NULL, 10);
 	argv++;
 	while (*argv)
 	{
