@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 17:13:28 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/05 19:24:45 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static void	init_philos(t_info *info, t_philo *philos)
 	{
 		philos[i].num = i + 1;
 		philos[i].status = true;
+		philos[i].fed = false;
 		philos[i].info = info;
 		philos[i].last_meal = 0;
 		pthread_mutex_init(&philos[i].fork_r, NULL);
@@ -86,7 +87,7 @@ static void	forever_alone(t_info *info)
 	if (!info->meal_count)
 		return ;
 	printf("%dms %d %s\n", 0, 1, FORK);
-	sniper_usleep(info->starve_time);
+	sniper_usleep(info->starve_time * 1000);
 	printf("\033[31m%lldms %d %s\033[0m\n", info->starve_time + 1, 1, DIE);
 }
 
@@ -94,7 +95,7 @@ int	main(int argc, char **argv)
 {
 	t_info			info;
 	t_philo			*philos;
-	pthread_t		waiter;
+	pthread_t		waitress;
 
 	if (parse(argc, argv, &info) == 1)
 		return (1);
@@ -107,10 +108,10 @@ int	main(int argc, char **argv)
 	if (!philos)
 		return (1);
 	init_philos(&info, philos);
-	if (pthread_create(&waiter, NULL, &waitress_routine, philos) == 1)
+	if (pthread_create(&waitress, NULL, &waitress_routine, philos) == 1)
 		return (1);
 	if (create_philos(philos) == 1)
 		return (1);
-	clean_up(&waiter, philos);
+	clean_up(&waitress, philos);
 	return (0);
 }
