@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 16:33:01 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 22:01:52 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,18 @@ static void	kill_philos(t_philo *philos)
 	}
 }
 
+static bool	check_fed(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->fed_mutex);
+	if (philo->fed == true)
+	{
+		pthread_mutex_unlock(&philo->fed_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->fed_mutex);
+	return (false);
+}
+
 void	*waitress_routine(void *arg)
 {
 	t_philo			*philos;
@@ -56,6 +68,7 @@ void	*waitress_routine(void *arg)
 	philos = (t_philo *)arg;
 	while (1)
 	{
+		usleep(50);
 		i = 0;
 		counter = 0;
 		while (i < philos[0].info->philo_count)
@@ -66,9 +79,8 @@ void	*waitress_routine(void *arg)
 				kill_philos(philos);
 				return (NULL);
 			}
-			if (philos[i].fed == true)
+			if (check_fed(&philos[i++]))
 				counter++;
-			i++;
 		}
 		if (counter == philos[0].info->philo_count)
 			break ;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers_utils.c                               :+:      :+:    :+:   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:50:53 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/03 21:09:11 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 21:35:05 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	philo_think(t_philo *philo)
 {
 	print_action(philo, THINK);
+	sniper_usleep(philo->info->eat_time / 300);
 }
 
 void	philo_eat(t_philo *philo)
