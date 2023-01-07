@@ -6,7 +6,7 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 15:11:52 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/04 20:07:41 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/07 16:55:56 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME = philo
 # command macros
 CC = gcc
 RM = rm -f
-ADD_FLAGS = #-g -pthread -fsanitize=address,undefined
+ADD_FLAGS = -pthread #-g -fsanitize=address,undefined
 FLAGS = -Wall -Wextra -Werror
 
 # path macros
@@ -25,7 +25,7 @@ OBJ_PATH = obj
 SRC_PATH = src
 
 # src and obj files macros
-SRC = $(wildcard $(SRC_PATH)/*/*.c)
+SRC = $(wildcard $(SRC_PATH)/*.c)
 OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
 # default rule
@@ -36,7 +36,7 @@ ${NAME}: ${OBJ}
 	${CC} ${FLAGS} ${ADD_FLAGS} ${OBJ} -o ${NAME}
 	@echo "make: philo success!"
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/*/%.c
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	${CC} ${FLAGS} ${ADD_FLAGS} -I$(INC_PATH) -c $< -o $@
 
 # phony targets

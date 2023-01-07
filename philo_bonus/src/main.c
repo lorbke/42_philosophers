@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 01:20:02 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 16:04:08 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 #include <stdlib.h> // malloc
 #include <pthread.h> // pthread functions and types
 #include <stdio.h> // printf
-#include <fcntl.h> // O_ flags
+#include <fcntl.h> // sem_open flags
 #include <signal.h> // terminate signal
+#include <sys/wait.h> // waitpid
 
 int			parse(int argc, char **argv, t_info *info);
 

@@ -6,70 +6,74 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/06 21:24:18 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 16:35:39 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "waitress.h"
-#include "philo.h" // t_info, t_philo, DIE
+#include "philo_bonus.h" // t_info, t_philo, DIE
 #include <pthread.h> // pthread_mutex_lock, pthread_mutex_unlock
 #include <stdio.h> // printf
+#include <stdlib.h> // exit
+#include <fcntl.h> // sem_open flags
+
+static bool	check_death_all(void)
+{
+	sem_t	*status;
+
+	status = sem_open(STATUS_SEM, 0);
+	if (status == SEM_FAILED)
+		return (false);
+	sem_close(status);
+	return (true);
+}
 
 static bool	check_death(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->eat_mutex);
-	pthread_mutex_lock(&philo->fed_mutex);
+	sem_wait(philo->eat_sem);
+	sem_wait(philo->fed_sem);
 	if (philo->fed == false && get_time() - philo->info->start_time
 		- philo->last_meal > philo->info->starve_time)
 	{
-		pthread_mutex_unlock(&philo->eat_mutex);
-		pthread_mutex_unlock(&philo->fed_mutex);
+		sem_post(philo->eat_sem);
+		sem_post(philo->fed_sem);
 		return (true);
 	}
-	pthread_mutex_unlock(&philo->fed_mutex);
-	pthread_mutex_unlock(&philo->eat_mutex);
+	sem_post(philo->eat_sem);
+	sem_post(philo->fed_sem);
 	return (false);
 }
 
-static void	kill_philos(t_philo *philos)
+static void	kill_philos(void)
 {
-	int	i;
-
-	i = 0;
-	while (i < philos[0].info->philo_count)
-	{
-		pthread_mutex_lock(&philos[i].status_mutex);
-		philos[i].status = false;
-		pthread_mutex_unlock(&philos[i].status_mutex);
-		i++;
-	}
+	sem_unlink(STATUS_SEM);
+	sem_open(STATUS_SEM, O_CREAT, SEM_PERMS, 0);
 }
 
 void	*waitress_routine(void *arg)
 {
-	t_philo			*philos;
-	int				i;
-	int				counter;
+	t_philo			*philo;
 
-	philos = (t_philo *)arg;
+	philo = (t_philo *)arg;
 	while (1)
 	{
-		i = 0;
-		counter = 0;
-		while (i < philos[0].info->philo_count)
+		usleep(1000);
+		sem_wait(philo->fed_sem);
+		if (check_death_all() == true || philo->fed == true)
 		{
-			if (check_death(&philos[i]))
-			{
-				print_action(&philos[i], DIE);
-				kill_philos(philos);
-				return (NULL);
-			}
-			if (philos[i].fed == true)
-				counter++;
-			i++;
+			sem_post(philo->fed_sem);
+			return (NULL);
 		}
-		if (counter == philos[0].info->philo_count)
-			break ;
+		sem_post(philo->fed_sem);
+		if (check_death(philo))
+		{
+			sem_wait(philo->info->print_sem);
+			printf("%lldms %d %s\n", get_time() - philo->info->start_time,
+				philo->num, DIE);
+			kill_philos();
+			sem_post(philo->info->print_sem);
+			return (NULL);
+		}
 	}
 	return (NULL);
 }

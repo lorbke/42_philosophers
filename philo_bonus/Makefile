@@ -6,7 +6,7 @@
 #    By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/04 15:11:52 by lorbke            #+#    #+#              #
-#    Updated: 2023/01/05 19:56:07 by lorbke           ###   ########.fr        #
+#    Updated: 2023/01/07 16:54:25 by lorbke           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,16 +16,20 @@ NAME = philo_bonus
 # command macros
 CC = gcc
 RM = rm -f
-ADD_FLAGS = -g -pthread #-fsanitize=address,undefined
+ADD_FLAGS = -pthread #-g -fsanitize=address,undefined
 FLAGS = -Wall -Wextra -Werror
 
 # path macros
 INC_PATH = includes
 OBJ_PATH = obj
 SRC_PATH = src
+LIB_PATH = $(SRC_PATH)/ft_lib
 
 # src and obj files macros
-SRC = $(wildcard $(SRC_PATH)/*/*.c)
+SRC = $(wildcard $(SRC_PATH)/*.c)
+#ft_isalnum.c ft_isalpha.c ft_isdigit.c ft_isspace.c ft_safeadd.c \
+ft_safemult.c ft_strisdigit.c ft_strtoi.c main.c parse.c philo_utils.c \
+philo.c time.c waitress.c
 OBJ = $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 
 # default rule
@@ -36,7 +40,7 @@ ${NAME}: ${OBJ}
 	${CC} ${FLAGS} ${ADD_FLAGS} ${OBJ} -o ${NAME}
 	@echo "make: philo_bonus success!"
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/*/%.c
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	${CC} ${FLAGS} ${ADD_FLAGS} -I$(INC_PATH) -c $< -o $@
 
 # phony targets
