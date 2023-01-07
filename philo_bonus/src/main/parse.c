@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:05:29 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/05 19:39:51 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 00:36:43 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,11 @@ static int	init_info(t_info *info, int argc, char **argv)
 	info->meal_count = -1;
 	if (argc == 6)
 		info->meal_count = ft_strtoi(argv[5], NULL, 10);
-	sem_unlink("forks");
-	info->forks = sem_open("forks", O_CREAT, 0666, info->philo_count);
-	sem_unlink("status_sem");
-	info->status_sem = sem_open("status_sem", O_CREAT, 0666, 0);
-	sem_unlink("print_sem");
-	info->print_sem = sem_open("print_sem", O_CREAT, 0666, 1);
+	sem_unlink(FORKS_SEM);
+	info->forks = sem_open(FORKS_SEM, O_CREAT, SEM_PERMS, info->philo_count);
+	sem_unlink(PRINT_SEM);
+	info->print_sem = sem_open(PRINT_SEM, O_CREAT, SEM_PERMS, 1);
+	sem_unlink(STATUS_SEM);
 	info->func_action[0] = &philo_take_forks;
 	info->func_action[1] = &philo_eat;
 	info->func_action[2] = &philo_sleep;

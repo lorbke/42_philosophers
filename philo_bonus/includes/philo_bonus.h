@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:23:47 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/05 19:32:24 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/07 00:44:20 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 # define SLEEP "is sleeping"
 # define FORK "has taken a fork"
 # define DIE "died"
+# define FED_SEM "fed_sem"
+# define EAT_SEM "eat_sem"
+# define PRINT_SEM "print_sem"
+# define FORKS_SEM "forks"
+# define STATUS_SEM "status_sem"
+# define SEM_PERMS 0600
 
 /* TYPEDEFS */
 typedef struct s_info	t_info;
@@ -40,7 +46,6 @@ struct s_philo
 	t_info			*info;
 	int				num;
 	bool			fed;
-	bool			status;
 	t_ms			last_meal;
 	sem_t			*eat_sem;
 	sem_t			*fed_sem;
@@ -56,7 +61,6 @@ struct s_info
 	int				meal_count;
 	t_ms			start_time;
 	sem_t			*forks;
-	sem_t			*status_sem;
 	sem_t			*print_sem;
 	t_func_action	func_action[ACTION_COUNT];
 };

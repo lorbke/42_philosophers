@@ -6,3 +6,6 @@ mac
 mac.dSYM
 /philo/obj
 /philo/philo
+/philo_bonus/obj
+/philo_bonus/philo_bonus
+/philo_bonus/out
