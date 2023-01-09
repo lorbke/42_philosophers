@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:22:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 15:35:13 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/09 18:38:45 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_action(t_philo *philo, char *str)
 		sem_post(philo->info->print_sem);
 		return ;
 	}
-	printf("%lldms %d %s\n", get_time() - philo->info->start_time,
+	printf("%lld %d %s\n", get_time() - philo->info->start_time,
 		philo->num, str);
 	sem_post(philo->info->print_sem);
 }
