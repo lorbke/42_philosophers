@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/10 01:36:59 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 20:37:22 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,18 @@ static bool	check_death(t_philo *philo)
 	return (false);
 }
 
-static void	kill_philos(void)
+static void	kill_all_philos(void)
 {
 	sem_unlink(STATUS_SEM);
 	sem_open(STATUS_SEM, O_CREAT, SEM_PERMS, 0);
+}
+
+static void	end_dinner(t_philo *philo)
+{
+	printf("%lldms %d %s\n", get_time() - philo->info->start_time,
+		philo->num, DIE);
+	kill_all_philos();
+	sem_post(philo->info->print_sem);
 }
 
 void	*waitress_routine(void *arg)
@@ -69,10 +77,7 @@ void	*waitress_routine(void *arg)
 		sem_post(philo->fed_sem);
 		if (check_death(philo))
 		{
-			printf("%lldms %d %s\n", get_time() - philo->info->start_time,
-				philo->num, DIE);
-			kill_philos();
-			sem_post(philo->info->print_sem);
+			end_dinner(philo);
 			return (NULL);
 		}
 		sem_post(philo->info->print_sem);
