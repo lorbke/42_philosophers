@@ -16,7 +16,8 @@
 void	philo_think(t_philo *philo)
 {
 	print_action(philo, THINK);
-	sniper_usleep(philo->info->eat_time / 2);
+	if (philo->info->philo_count % 2 != 0)
+		sniper_usleep(philo->info->eat_time / 2);
 }
 
 void	philo_eat(t_philo *philo)
