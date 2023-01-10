@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/10 01:41:50 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 16:21:07 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,19 @@ static bool	check_death(t_philo *philo)
 	return (false);
 }
 
-static void	kill_philos(t_philo *philos)
+static bool	check_fed(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->fed_mutex);
+	if (philo->fed == true)
+	{
+		pthread_mutex_unlock(&philo->fed_mutex);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->fed_mutex);
+	return (false);
+}
+
+static void	kill_all_philos(t_philo *philos)
 {
 	int	i;
 
@@ -47,22 +59,13 @@ static void	kill_philos(t_philo *philos)
 	}
 }
 
-static bool	check_fed(t_philo *philo)
+static void	end_dinner(t_philo *philos, int i)
 {
-	pthread_mutex_lock(&philo->fed_mutex);
-	if (philo->fed == true)
-	{
-		pthread_mutex_unlock(&philo->fed_mutex);
-		return (true);
-	}
-	pthread_mutex_unlock(&philo->fed_mutex);
-	return (false);
-}
-
-static void	print_death(t_philo *philo, char *str)
-{
-	printf("%lld %d %s\n", get_time() - philo->info->start_time,
-		philo->num, str);
+	pthread_mutex_lock(&philos[0].info->print_mutex);
+	kill_all_philos(philos);
+	printf("%lld %d %s\n", get_time() - philos[i].info->start_time,
+		philos[i].num, DIE);
+	pthread_mutex_unlock(&philos[0].info->print_mutex);
 }
 
 void	*waitress_routine(void *arg)
@@ -81,10 +84,7 @@ void	*waitress_routine(void *arg)
 		{
 			if (check_death(&philos[i]))
 			{
-				pthread_mutex_lock(&philos[0].info->print_mutex);
-				print_death(&philos[i], DIE);
-				kill_philos(philos);
-				pthread_mutex_unlock(&philos[0].info->print_mutex);
+				end_dinner(philos, i);
 				return (NULL);
 			}
 			if (check_fed(&philos[i++]))
