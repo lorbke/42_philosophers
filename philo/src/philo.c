@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:22:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 22:01:37 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:18:33 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,15 @@ static bool	check_death(t_philo *philo)
 
 void	print_action(t_philo *philo, char *str)
 {
+	pthread_mutex_lock(&philo->info->print_mutex);
 	if (!check_death(philo))
 	{
-		pthread_mutex_lock(&philo->info->print_mutex);
 		printf("%lld %d %s\n", get_time() - philo->info->start_time,
 			philo->num, str);
 		pthread_mutex_unlock(&philo->info->print_mutex);
 	}
+	else
+		pthread_mutex_unlock(&philo->info->print_mutex);
 }
 
 static void	set_fed(t_philo *philo)

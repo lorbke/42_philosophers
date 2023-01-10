@@ -6,14 +6,14 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:19:44 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/09 18:32:31 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:08:41 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lib.h"
 #include "philo.h"
 #include "waitress.h"
-#include "time.h"
+#include "philo_time.h"
 #include <unistd.h> // write
 #include <stdlib.h> // malloc
 #include <pthread.h> // pthread_create
@@ -72,7 +72,7 @@ static void	init_philos(t_info *info, t_philo *philos)
 		philos[i].status = true;
 		philos[i].fed = false;
 		philos[i].info = info;
-		philos[i].last_meal = 0;
+		philos[i].last_meal = info->start_time;
 		pthread_mutex_init(&philos[i].fork_r, NULL);
 		pthread_mutex_init(&philos[i].status_mutex, NULL);
 		pthread_mutex_init(&philos[i].eat_mutex, NULL);

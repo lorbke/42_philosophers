@@ -6,11 +6,11 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:07:45 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 16:18:26 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 00:38:42 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "time.h"
+#include "philo_time.h"
 #include <sys/time.h> // gettimeofday
 #include <unistd.h> // usleep
 #include <stddef.h> // NULL
@@ -23,13 +23,11 @@ t_ms	get_time(void)
 	return ((time.tv_usec / 1000 + time.tv_sec * 1000));
 }
 
-void	sniper_usleep(t_ms time)
+void	sniper_usleep(t_us time)
 {
 	t_ms	wake_up;
 
 	wake_up = get_time() + time / 1000;
-	if (time > 10)
-		usleep(time - 10);
 	while (get_time() < wake_up)
-		;
+		usleep(200);
 }

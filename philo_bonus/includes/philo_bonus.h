@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 18:23:47 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 00:44:20 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:46:26 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define PHILO_BONUS_H
 
 /* INCLUDES */
-# include "time.h" // t_ms
+# include "philo_time.h" // t_ms
 # include <stddef.h> // size_t
 # include <pthread.h> // pthread_t, pthread_mutex_t
 # include <stdbool.h> // bool

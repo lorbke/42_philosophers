@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time.h                                             :+:      :+:    :+:   */
+/*   philo_time.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:12:10 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 17:11:34 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 00:21:45 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TIME_H
-# define TIME_H
+#ifndef PHILO_TIME_H
+# define PHILO_TIME_H
 
 /* TYPEDEFS */
-typedef long long		t_ms;
+typedef long long		t_ms; // milliseconds
+typedef long long		t_us; // microseconds
 
 /* PROTOTYPES */
 t_ms	get_time(void);

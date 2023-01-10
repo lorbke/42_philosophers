@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 16:35:39 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:36:59 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,25 @@ void	*waitress_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (1)
 	{
-		usleep(1000);
+		usleep(50);
+		sem_wait(philo->info->print_sem);
 		sem_wait(philo->fed_sem);
 		if (check_death_all() == true || philo->fed == true)
 		{
 			sem_post(philo->fed_sem);
+			sem_post(philo->info->print_sem);
 			return (NULL);
 		}
 		sem_post(philo->fed_sem);
 		if (check_death(philo))
 		{
-			sem_wait(philo->info->print_sem);
 			printf("%lldms %d %s\n", get_time() - philo->info->start_time,
 				philo->num, DIE);
 			kill_philos();
 			sem_post(philo->info->print_sem);
 			return (NULL);
 		}
+		sem_post(philo->info->print_sem);
 	}
 	return (NULL);
 }

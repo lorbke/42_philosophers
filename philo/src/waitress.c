@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:58:37 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 22:01:52 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:41:50 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ static bool	check_fed(t_philo *philo)
 	return (false);
 }
 
+static void	print_death(t_philo *philo, char *str)
+{
+	printf("%lld %d %s\n", get_time() - philo->info->start_time,
+		philo->num, str);
+}
+
 void	*waitress_routine(void *arg)
 {
 	t_philo			*philos;
@@ -75,8 +81,10 @@ void	*waitress_routine(void *arg)
 		{
 			if (check_death(&philos[i]))
 			{
-				print_action(&philos[i], DIE);
+				pthread_mutex_lock(&philos[0].info->print_mutex);
+				print_death(&philos[i], DIE);
 				kill_philos(philos);
+				pthread_mutex_unlock(&philos[0].info->print_mutex);
 				return (NULL);
 			}
 			if (check_fed(&philos[i++]))

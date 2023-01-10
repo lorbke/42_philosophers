@@ -6,14 +6,14 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:05:29 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/04 18:14:58 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 00:20:39 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lib.h"
 #include "philo.h"
 #include "waitress.h"
-#include "time.h"
+#include "philo_time.h"
 #include <unistd.h> // write
 #include <stdlib.h> // malloc
 #include <pthread.h> // pthread_create

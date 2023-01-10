@@ -6,16 +6,17 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:50:53 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/07 21:35:05 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/10 01:13:41 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <unistd.h> // usleep
 
 void	philo_think(t_philo *philo)
 {
 	print_action(philo, THINK);
-	sniper_usleep(philo->info->eat_time / 300);
+	sniper_usleep(philo->info->eat_time / 2);
 }
 
 void	philo_eat(t_philo *philo)
