@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:05:29 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/10 00:21:05 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/11 22:45:47 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <pthread.h> // pthread_create
 #include <stdio.h> // printf
 #include <fcntl.h> // O_ flags
+#include <errno.h> // errno flags
 
 static int	init_info(t_info *info, int argc, char **argv)
 {
@@ -32,6 +33,8 @@ static int	init_info(t_info *info, int argc, char **argv)
 	info->meal_count = -1;
 	if (argc == 6)
 		info->meal_count = ft_strtoi(argv[5], NULL, 10);
+	if (errno == ERANGE)
+		return (1);
 	sem_unlink(FORKS_SEM);
 	info->forks = sem_open(FORKS_SEM, O_CREAT, SEM_PERMS, info->philo_count);
 	sem_unlink(PRINT_SEM);
@@ -75,11 +78,19 @@ static int	check_args(int argc, char **argv)
 
 int	parse(int argc, char **argv, t_info *info)
 {
+	int	error;
+
 	if (check_args(argc, argv) == 1)
 		return (1);
-	if (init_info(info, argc, argv) == 1)
+	error = init_info(info, argc, argv);
+	if (error == 1)
 	{
-		write(2, "Error: integer overflow\n", 24);
+		write(2, "Error: range error\n", 19);
+		return (1);
+	}
+	else if (error == 2)
+	{
+		write(2, "Error: only positive numbers allowed\n", 37);
 		return (1);
 	}
 	return (0);
