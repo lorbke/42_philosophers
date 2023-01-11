@@ -6,7 +6,7 @@
 /*   By: lorbke <lorbke@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 15:05:29 by lorbke            #+#    #+#             */
-/*   Updated: 2023/01/10 00:20:39 by lorbke           ###   ########.fr       */
+/*   Updated: 2023/01/11 22:34:04 by lorbke           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdlib.h> // malloc
 #include <pthread.h> // pthread_create
 #include <stdio.h> // printf
+#include <errno.h> // errno flags
 
 static int	init_info(t_info *info, int argc, char **argv)
 {
@@ -27,10 +28,12 @@ static int	init_info(t_info *info, int argc, char **argv)
 	info->sleep_time = ft_strtoi(argv[4], NULL, 10) * 1000;
 	if (info->philo_count < 0 || info->starve_time < 0 || info->eat_time < 0
 		|| info->sleep_time < 0)
-		return (1);
+		return (2);
 	info->meal_count = -1;
 	if (argc == 6)
 		info->meal_count = ft_strtoi(argv[5], NULL, 10);
+	if (errno == ERANGE)
+		return (1);
 	pthread_mutex_init(&info->print_mutex, NULL);
 	info->func_action[0] = &philo_take_forks;
 	info->func_action[1] = &philo_eat;
@@ -70,11 +73,19 @@ static int	check_args(int argc, char **argv)
 
 int	parse(int argc, char **argv, t_info *info)
 {
+	int	error;
+
 	if (check_args(argc, argv) == 1)
 		return (1);
-	if (init_info(info, argc, argv) == 1)
+	error = init_info(info, argc, argv);
+	if (error == 1)
 	{
-		write(2, "Error: integer overflow\n", 24);
+		write(2, "Error: range error\n", 19);
+		return (1);
+	}
+	else if (error == 2)
+	{
+		write(2, "Error: only positive numbers allowed\n", 37);
 		return (1);
 	}
 	return (0);
